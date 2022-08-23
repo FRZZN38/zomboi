@@ -65,35 +65,36 @@ class MapHandler(commands.Cog):
         celly = y // chunkSize
         posX = x % chunkSize
         posY = y % chunkSize
-
-        image = Image.new("RGB", (chunkSize, chunkSize), colours["default"])
+        image = Image.new("RGB", (chunkSize*3, chunkSize*3), colours["default"])
         draw = ImageDraw.Draw(image)
 
         tree = ET.parse(self.mapsPath + ("/Muldraugh, KY/worldmap.xml"))
         root = tree.getroot()
-        for cell in root.findall("cell"):
-            if int(cell.get("x")) == cellx and int(cell.get("y")) == celly:
-                for feature in cell.findall("feature"):
-                    for geometry in feature.findall("geometry"):
-                        if geometry.get("type") == "Polygon":
-                            for coordinates in geometry.findall("coordinates"):
-                                points = []
-                                for point in coordinates.findall("point"):
-                                    points.append(
-                                        (int(point.get("x")), int(point.get("y")))
-                                    )
-                            for properties in feature.findall("properties"):
-                                for property in properties.findall("property"):
-                                    draw.polygon(
-                                        points, fill=colours[property.get("value")]
-                                    )
+        for cellXs in range (cellx-1, cellx+2):
+            for cellYs in range (celly-1, celly+2):
+                for cell in root.findall("cell"):
+                    if int(cell.get("x")) == cellXs and int(cell.get("y")) == cellYs:
+                        for feature in cell.findall("feature"):
+                            for geometry in feature.findall("geometry"):
+                                if geometry.get("type") == "Polygon":
+                                    for coordinates in geometry.findall("coordinates"):
+                                        points = []
+                                        for point in coordinates.findall("point"):
+                                            points.append(
+                                                (int(point.get("x"))+(cellXs-cellx+1)*chunkSize, int(point.get("y"))+(cellYs-celly+1)*chunkSize)
+                                            )
+                                    for properties in feature.findall("properties"):
+                                        for property in properties.findall("property"):
+                                            draw.polygon(
+                                                points, fill=colours[property.get("value")]
+                                            )
 
         draw.polygon(
             (
-                (posX - 1, posY - 1),
-                (posX + 1, posY - 1),
-                (posX + 1, posY + 1),
-                (posX - 1, posY + 1),
+                (posX+chunkSize - 3, posY+chunkSize - 3),
+                (posX+chunkSize + 3, posY+chunkSize - 3),
+                (posX+chunkSize + 3, posY+chunkSize + 3),
+                (posX+chunkSize - 3, posY+chunkSize + 3),
             ),
             (255, 0, 0),
         )

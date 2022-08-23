@@ -26,7 +26,7 @@ if logPath is None or len(logPath) == 0:
         exit()
 
 # Our main bot object
-intents = discord.Intents.default()
+intents = discord.Intents.all()
 intents.members = True
 intents.guilds = True
 zomboi = commands.bot.Bot("!", intents=intents)
@@ -66,12 +66,12 @@ async def on_ready():
         zomboi.log.warning("Unable to get channel, will not be enabled")
     else:
         zomboi.log.info("channel connected")
-    zomboi.add_cog(UserHandler(zomboi, logPath))
-    zomboi.add_cog(ChatHandler(zomboi, logPath))
-    zomboi.add_cog(PerkHandler(zomboi, logPath))
-    zomboi.add_cog(RCONAdapter(zomboi))
-    zomboi.add_cog(MapHandler(zomboi))
-    zomboi.add_cog(AdminLogHandler(zomboi, logPath))
+    await zomboi.add_cog(UserHandler(zomboi, logPath))
+    await zomboi.add_cog(ChatHandler(zomboi, logPath))
+    await zomboi.add_cog(PerkHandler(zomboi, logPath))
+    await zomboi.add_cog(RCONAdapter(zomboi))
+    await zomboi.add_cog(MapHandler(zomboi))
+    await zomboi.add_cog(AdminLogHandler(zomboi, logPath))
 
 
 # Always finally run the bot

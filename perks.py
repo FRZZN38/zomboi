@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timedelta
 from discord.ext import tasks, commands
 from file_read_backwards import FileReadBackwards
 import glob
@@ -24,6 +24,7 @@ class PerkHandler(commands.Cog):
         """Split a log line into a timestamp and the remaining message"""
         timestampStr, message = line.strip()[1:].split("]", 1)
         timestamp = datetime.strptime(timestampStr, "%d-%m-%y %H:%M:%S.%f")
+        timestamp = timestamp + timedelta (hours=2)
         return timestamp, message
 
     @tasks.loop(seconds=2)

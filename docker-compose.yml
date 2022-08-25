@@ -4,8 +4,8 @@ services:
   zomboi:
     build: .
     volumes:
-      - /path/to/maps:/home/zomboi/steam/steamapps/common/ProjectZomboid/media/maps
-      - /path/to/logs:/home/zomboi/Zomboid/Logs
+      - /path/to/maps:$MAPS_PATH
+      - /path/to/logs:$LOGS_PATH
     environment:
       DISCORD_TOKEN: $DISCORD_TOKEN
       CHANNEL: $CHANNEL
